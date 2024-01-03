@@ -2,7 +2,7 @@ name: Deploy to ECR
 
 on:
   push:
-    branches: [ dev ]
+    branches: [ dev, stable ]
 
 env:
   ECR_REPOSITORY: mailbox
@@ -14,9 +14,12 @@ jobs:
     name: Deployment
     runs-on: ubuntu-latest
     steps:
-      - name: Set short git commit SHA
-        id: commit
-        uses: prompt/actions-commit-hash@v3
+      - name: Set Output Var
+        id: deploy-var
+        run: |
+          echo "BRANCH=$GITHUB_REF_NAME" >> $GITHUB_OUTPUT
+          echo "TIME=$(date +'%Y%m%d-%H:%M:%S')" >> $GITHUB_OUTPUT
+          echo "HASH=$(echo $GITHUB_SHA | cut -c 1-6)" >> $GITHUB_OUTPUT
 
       - name: Check out code
         uses: actions/checkout@v2
@@ -35,7 +38,7 @@ jobs:
       - name: Build, tag, and push image to Amazon ECR
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG: ${{ steps.commit.outputs.short }}
+          IMAGE_TAG: "${{ steps.deploy-var.outputs.HASH }}-${{ steps.deploy-var.outputs.BRANCH }}-${{ steps.deploy-var.outputs.TIME }}"
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f docker/Dockerfile .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
