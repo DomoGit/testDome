@@ -1,9 +1,0 @@
-<?php
-echo "hello world";
-
-
-function main() {
-
-	echo "this is main function";
-}
-
