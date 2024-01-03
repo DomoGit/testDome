@@ -18,6 +18,6 @@ func main() {
 
 	// 启动服务器并监听指定端口
 	fmt.Println("Server is running on http://localhost:8080")
-	fmt.Println("update1")
+	fmt.Println("update2")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
