@@ -14,6 +14,7 @@ jobs:
     name: Deployment
     runs-on: ubuntu-latest
     steps:
+      # 输出分支名、时间、commit hash
       - name: Set Output Var
         id: deploy-var
         run: |
@@ -21,9 +22,11 @@ jobs:
           echo "TIME=$(date +'%Y%m%d-%H-%M-%S')" >> $GITHUB_OUTPUT
           echo "HASH=$(echo $GITHUB_SHA | cut -c 1-6)" >> $GITHUB_OUTPUT
 
+      # 检出代码
       - name: Check out code
         uses: actions/checkout@v2
 
+      # 配置 AWS 认证
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -31,10 +34,12 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{env.AWS_REGION}}
 
+      # 登录 ECR
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
+      # 构建镜像并推送到 ECR
       - name: Build, tag, and push image to Amazon ECR
         id: build-push-image
         env:
@@ -45,13 +50,15 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_OUTPUT
 
+      # 配置kubectl
       - name: Update kube config
         run: aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_REGION
 
+      # 部署到 EKS
       - name: Deploy to EKS
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ steps.build-push-image.outputs.IMAGE_TAG }}
         run: |
-          sed -i.bak "s|DOCKER_IMAGE|$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG|g" manifests/hello-app-deployment.yaml && \
+          sed -i.bak "s|DOCKER_IMAGE|$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG|g" manifests/echo-app-deployment.yaml && \
           kubectl apply -f manifests/echo-app-deployment.yaml
