@@ -17,7 +17,7 @@ spec:
         app: echo-app
     spec:
       restartPolicy: Always
-      initContainers:
+      containers:
         - name: redis
           image: redis:7.2
           imagePullPolicy: IfNotPresent
@@ -37,7 +37,6 @@ spec:
               value: holla.api.user
             - name: MYSQL_PASSWORD
               value: "123456"
-      containers:
         - name: echo-app
           image: DOCKER_IMAGE
           imagePullPolicy: Always
