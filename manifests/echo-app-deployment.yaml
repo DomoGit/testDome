@@ -22,6 +22,42 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
+          env:
+            - name: MYSQL_HOST
+              value: mysql
+            - name: MYSQL_PORT
+              value: 3306
+            - name: MYSQL_USER
+              value: holla.api.user
+            - name: MYSQL_PASSWORD
+              value: 123456
+            - name: MYSQL_DATABASE
+              value: mailbox
+            - name: REDIS_HOST
+              value: redis
+            - name: REDIS_PORT
+              value: 6379
+        - name: redis
+            image: redis:7.2
+            imagePullPolicy: IfNotPresent
+            ports:
+              - containerPort: 6379
+            restartPolicy: Always
+        - name: mysql
+          image: mysql:8.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: 123456
+            - name: MYSQL_DATABASE
+              value: mailbox
+            - name: MYSQL_USER
+              value: holla.api.user
+            - name: MYSQL_PASSWORD
+              value: 123456
+          restartPolicy: Always
   strategy:
     type: RollingUpdate
     rollingUpdate:
