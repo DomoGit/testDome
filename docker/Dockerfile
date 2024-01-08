@@ -8,8 +8,7 @@ WORKDIR /app
 COPY . .
 
 # 编译 Go 应用程序
-RUN cd ./src \
-    && go build -o /app/bin/echo-app .
+RUN go build -o /app/bin/echo-app /app/src/main.go
 
 # 设置容器启动命令
 CMD ["/app/bin/echo-app"]
