@@ -26,11 +26,14 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
 
-      # 配置 ssh key, 私有仓库, 安装 Go 依赖
-      - name: install Go Library
+      # 安装 Go 环境
+      - name: setup go environment
         uses: actions/setup-go@v4
         with:
           go-version: '^1.18.0'
+
+      # 配置 ssh key, 私有仓库, 安装 Go 依赖
+      - name: install Go Library
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
