@@ -38,11 +38,11 @@ spec:
             - name: REDIS_PORT
               value: 6379
         - name: redis
-            image: redis:7.2
-            imagePullPolicy: IfNotPresent
-            ports:
-              - containerPort: 6379
-            restartPolicy: Always
+          image: redis:7.2
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 6379
+          restartPolicy: Always
         - name: mysql
           image: mysql:8.0
           imagePullPolicy: IfNotPresent
