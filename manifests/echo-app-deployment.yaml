@@ -18,6 +18,13 @@ spec:
     spec:
       restartPolicy: Always
       containers:
+        - name: busybox
+          image: busybox:stable
+          imagePullPolicy: IfNotPresent
+          command:
+            - /bin/sh
+            - "-c"
+            - 3600
         - name: redis
           image: redis:7.2
           imagePullPolicy: IfNotPresent
