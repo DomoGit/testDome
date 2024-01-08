@@ -15,6 +15,7 @@ func TestMysql() {
 	var mysqlPassword = os.Getenv("MYSQL_PASSWORD")
 	var mysqlDb = os.Getenv("MYSQL_DB")
 	var dsn = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", mysqlUser, mysqlPassword, mysqlHost, mysqlPort, mysqlDb)
+	fmt.Println("mysql dsn:", dsn)
 	DB, _ := sql.Open("mysql", dsn)
 	//设置数据库最大连接数
 	DB.SetConnMaxLifetime(100)
@@ -53,6 +54,7 @@ func newClient() *redis.Client {
 	var redisHost = os.Getenv("REDIS_HOST")
 	var redisPort = os.Getenv("REDIS_PORT")
 	var address = fmt.Sprintf("%s:%s", redisHost, redisPort)
+	fmt.Println("redis address:", address)
 	client := redis.NewClient(&redis.Options{
 		Addr:     address, // redis地址
 		Password: "",               // 密码
