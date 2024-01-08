@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-
+	"github.com/DomoGit/testDome/src/boot"
 	"github.com/holla-world/golibr/awsnqs"
 )
 
@@ -30,6 +30,9 @@ type TestContent struct {
 func main() {
 	body := "this is a test1"
 	writeSNS("holla_1", body, SNSARNPRIVATE)
+
+	boot.TestMysql()
+	boot.TestRedis()
 }
 
 func writeSNS(uid, content, arn string) {
