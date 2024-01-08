@@ -16,6 +16,7 @@ spec:
       labels:
         app: echo-app
     spec:
+      restartPolicy: Always
       containers:
         - name: echo-app
           image: DOCKER_IMAGE
@@ -42,7 +43,6 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 6379
-          restartPolicy: Always
         - name: mysql
           image: mysql:8.0
           imagePullPolicy: IfNotPresent
@@ -57,7 +57,6 @@ spec:
               value: holla.api.user
             - name: MYSQL_PASSWORD
               value: "123456"
-          restartPolicy: Always
   strategy:
     type: RollingUpdate
     rollingUpdate:
