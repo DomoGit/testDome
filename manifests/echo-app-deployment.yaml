@@ -17,6 +17,26 @@ spec:
         app: echo-app
     spec:
       restartPolicy: Always
+      initContainers:
+        - name: redis
+          image: redis:7.2
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 6379
+        - name: mysql
+          image: mysql:8.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "123456"
+            - name: MYSQL_DATABASE
+              value: mailbox
+            - name: MYSQL_USER
+              value: holla.api.user
+            - name: MYSQL_PASSWORD
+              value: "123456"
       containers:
         - name: echo-app
           image: DOCKER_IMAGE
@@ -38,25 +58,6 @@ spec:
               value: redis
             - name: REDIS_PORT
               value: "6379"
-        - name: redis
-          image: redis:7.2
-          imagePullPolicy: IfNotPresent
-          ports:
-            - containerPort: 6379
-        - name: mysql
-          image: mysql:8.0
-          imagePullPolicy: IfNotPresent
-          ports:
-            - containerPort: 3306
-          env:
-            - name: MYSQL_ROOT_PASSWORD
-              value: "123456"
-            - name: MYSQL_DATABASE
-              value: mailbox
-            - name: MYSQL_USER
-              value: holla.api.user
-            - name: MYSQL_PASSWORD
-              value: "123456"
   strategy:
     type: RollingUpdate
     rollingUpdate:
