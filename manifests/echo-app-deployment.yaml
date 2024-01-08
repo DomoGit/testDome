@@ -24,7 +24,7 @@ spec:
           command:
             - /bin/sh
             - "-c"
-            - "3600"
+            - sleep 3600
         - name: redis
           image: redis:7.2
           imagePullPolicy: IfNotPresent
