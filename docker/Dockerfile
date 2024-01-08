@@ -5,10 +5,7 @@ FROM golang:latest
 WORKDIR /app
 
 # 复制本地代码到容器内的工作目录
-COPY . .
-
-# 编译 Go 应用程序
-RUN go build -o /app/bin/echo-app /app/src/main.go
+COPY ./bin/echo-app ./bin/echo-app
 
 # 设置容器启动命令
 CMD ["/app/bin/echo-app"]
