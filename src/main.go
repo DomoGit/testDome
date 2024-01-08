@@ -1,23 +1,48 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
-	"log"
-	"net/http"
+
+	"github.com/holla-world/golibr/awsnqs"
 )
 
-func main() {
-	// 设置路由和处理函数
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		_, err := fmt.Fprintf(w, "Hello, World!")
-		if err != nil {
-			fmt.Println("err: ", err)
-			return
-		}
-	})
+const (
+	MsgCount      = 1
+	SNSARNLOW     = "arn:aws:sns:ap-northeast-1:529673077012:mailbox-test"
+	SNSARNMID     = "arn:aws:sns:ap-northeast-1:529673077012:mailbox-middle-prod"
+	SNSARNPRIVATE = "arn:aws:sns:ap-northeast-1:529673077012:mailbox-message-prod"
+)
 
-	// 启动服务器并监听指定端口
-	fmt.Println("Server is running on http://localhost:8080")
-	fmt.Println("update2")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+type TestCMD struct {
+	ToUid   []string `json:"to_uid"`
+	Content string   `json:"content"`
+	Channel string   `json:"channel"`
+	Src     string   `json:"src"`
+	Appid   int      `json:"appid"`
+}
+
+type TestContent struct {
+	Id   int    `json:"id"`
+	Body string `json:"body"`
+}
+
+func main() {
+	body := "this is a test1"
+	writeSNS("holla_1", body, SNSARNPRIVATE)
+}
+
+func writeSNS(uid, content, arn string) {
+	for i := 0; i < MsgCount; i++ {
+		msg := TestCMD{
+			ToUid:   []string{uid},
+			Content: content,
+			Channel: "tx",
+			Src:     "holla",
+		}
+		b, _ := json.Marshal(msg)
+
+		res, err := awsnqs.SNSPublish("test", arn, string(b))
+		fmt.Println(res, err)
+	}
 }
