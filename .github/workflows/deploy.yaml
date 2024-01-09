@@ -2,11 +2,11 @@ name: Deploy to ECR
 
 on:
   push:
-    branches: [ dev ]
+    branches: [ ycq/dev-workflow-init ]
 
 env:
   ECR_REPOSITORY: mailbox
-  EKS_CLUSTER_NAME: eks-demo
+  EKS_CLUSTER_NAME: eks-demo-2
   AWS_REGION: ap-northeast-1
 
 jobs:
